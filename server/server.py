@@ -27,51 +27,76 @@ album_name = ""
 album_release = ""
 song_name = ""
 picture_url = ""
+text_output = ""
 
 
-# /api/home, if you go to this route, you will get a json response
-@app.route("/api/home", methods=["GET"])
-def home():
-    return jsonify({
-        'artist_name': artist_name,
-        'album_name': album_name,
-        'album_release': album_release,
-        'song_name': song_name,
-        'picture_url': picture_url
-    })
-
-@app.route("/api/search", methods=["POST"])
+@app.route("/api/search", methods=["POST", "GET"])
 def searchbar():
+    global artist_name, album_name, album_release, song_name, picture_url, text_output
 
-    data = request.json
-    # Getting the search query from the request
-    search_query = data.get("search_query", "")
-    search_type = data.get("search_type", "track") # default to track if not provided
+    if request.method == 'POST':
+        data = request.json
+        print("Received request with data:", data)  # For debugging
+        search_query = data.get("search_query", "")
+        search_type = data.get("search_type", "track") # default to track if not provided
 
-    print(search_query)
-    print(search_type)
-    searcher = songsearcher.SongSearcher(search_query, search_type)
-    if searcher.searchType == "album":
-        artist_name = searcher.result["albums"]["items"][0]["artists"][0]["name"]
-        album_name = searcher.result["albums"]["items"][0]["name"]
-        album_release = searcher.result["albums"]["items"][0]["release_date"]
-        picture_url = ["albums"]["items"][0]["images"][0]["url"]
-    elif searcher.searchType == "artist":
-        artist_name = searcher.result["artists"]["items"][0]["name"]
-        picture_url = searcher.result["artists"]["items"][0]["images"][0]["url"]
-    elif searcher.searchType == "track":
-        song_name = searcher.result["tracks"]["items"][0]["name"]
-        album_name = searcher.result["tracks"]["items"][0]["album"]["name"]
-        artist_name = searcher.result["tracks"]["items"][0]["artists"][0]["name"]
-        picture_url = searcher.result["tracks"]["items"][0]["album"]["images"][0]["url"]
-    
-    return jsonify({
-        'artist_name': artist_name,
-        'album_name': album_name,
-        'album_release': album_release,
-        'song_name': song_name,
-        'picture_url': picture_url
-    })
+        searcher = songsearcher.SongSearcher(search_query, search_type)
+
+        if searcher.searchType == "album":
+            artist_name = searcher.result["albums"]["items"][0]["artists"][0]["name"]
+            album_name = searcher.result["albums"]["items"][0]["name"]
+            album_release = searcher.result["albums"]["items"][0]["release_date"]
+            picture_url = ["albums"]["items"][0]["images"][0]["url"]
+            output = langchainfunc.LangChainFunc("", album_name=album_name, artist_name=artist_name)
+            text_output = output.text_output()
+            
+
+            return jsonify({
+            'artist_name': artist_name,
+            'album_name': album_name,
+            'album_release': album_release,
+            'picture_url': picture_url,
+            'output': text_output
+            })
+            
+
+        elif searcher.searchType == "artist":
+            artist_name = searcher.result["artists"]["items"][0]["name"]
+            picture_url = searcher.result["artists"]["items"][0]["images"][0]["url"]
+            output = langchainfunc.LangChainFunc("", "", artist_name=artist_name)
+            text_output = output.text_output()
+
+            return jsonify({
+            'artist_name': artist_name,
+            'picture_url': picture_url
+            })
+
+        elif searcher.searchType == "track":
+            song_name = searcher.result["tracks"]["items"][0]["name"]
+            album_name = searcher.result["tracks"]["items"][0]["album"]["name"]
+            artist_name = searcher.result["tracks"]["items"][0]["artists"][0]["name"]
+            picture_url = searcher.result["tracks"]["items"][0]["album"]["images"][0]["url"]
+            print(artist_name, album_name, song_name, picture_url)
+            output = langchainfunc.LangChainFunc(song_name=song_name, album_name=album_name, artist_name=artist_name)
+            text_output = str(output.text_output())
+            print(text_output)
+
+            return jsonify({
+            'artist_name': artist_name,
+            'album_name': album_name,
+            'song_name': song_name,
+            'picture_url': picture_url,
+            'output': text_output
+            })
+    else:
+        return jsonify({
+            'artist_name': artist_name,
+            'album_name': album_name,
+            'song_name': song_name,
+            'picture_url': picture_url,
+            'output': text_output
+            })
+
 
 # @app.route("/login")
 # def login():

@@ -1,6 +1,4 @@
-"use client";
-import React from "react";
-import { useMemo, useState } from "react";
+import React, { useState, Key } from "react";
 import {
   Dropdown,
   DropdownTrigger,
@@ -14,17 +12,14 @@ interface DropmenuProps {
 }
 
 export default function Dropmenu({ onChange }: DropmenuProps) {
-  const [selectedKeys, setSelectedKeys] = useState<string>("track");
-
-  const selectedValue = useMemo(
-    () => Array.from(selectedKeys).join(", ").replaceAll("_", " "),
-    [selectedKeys]
-  );
+  const [selectedKey, setSelectedKey] = useState<string>("▽");
 
   // Calls handler when selection changes
-  const handleSelectionChange = (key: React.Key | React.Key[]) => {
+  const handleSelectionChange = (key: Key) => {
     // Ensure the key is a string before proceeding
     if (typeof key === "string") {
+      setSelectedKey(key); // Update the local state
+
       onChange(key); // Call the onChange callback with the string key
     }
   };
@@ -33,7 +28,7 @@ export default function Dropmenu({ onChange }: DropmenuProps) {
     <Dropdown>
       <DropdownTrigger>
         <Button variant="bordered" className="capitalize">
-          {selectedValue}
+          {selectedKey.replace("_", " ")} {/* Use selectedKey directly */}
         </Button>
       </DropdownTrigger>
       <DropdownMenu
@@ -41,7 +36,7 @@ export default function Dropmenu({ onChange }: DropmenuProps) {
         variant="flat"
         disallowEmptySelection
         selectionMode="single"
-        onAction={handleSelectionChange}
+        onAction={handleSelectionChange} // Corrected to handleSelectionChange
       >
         <DropdownItem key="track">Track</DropdownItem>
         <DropdownItem key="artist">Artist</DropdownItem>

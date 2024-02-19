@@ -12,15 +12,14 @@ export default function AboutPage() {
       <div className="flex justify-center m-10">
         <div className="w-1/2">
           <h2 className="text-2xl p-10 ">
-            Leveraging Spotify API and LLM, find out more about the songs you
-            have on loop.
+            Leveraging Spotify API and LLM, find out more about the songs,
+            creators and albums you have on loop.
           </h2>
         </div>
         <div className="w-1/2">
           <h2 className="text-2xl p-10">
-            Simply search your favourite song, album or artist and get a
-            detailed summary of their origins, we'll even recommend you a few
-            songs you might like!
+            Simply search what you want to know and get a detailed summary of
+            their origins, we'll even recommend you a few songs you might like!
           </h2>
         </div>
       </div>

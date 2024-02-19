@@ -4,8 +4,6 @@ import Cover from "./components/cover";
 import SearchBar from "./components/searchBar";
 import AboutPage from "./components/aboutPage";
 import Image from "next/image";
-import { NextUIProvider } from "@nextui-org/react";
-import Dropmenu from "./components/dropmenu";
 
 export default function Home() {
   const [data, setData] = useState({
