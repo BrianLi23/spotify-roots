@@ -33,7 +33,7 @@ class LangChainFunc:
         
     def text_output(self):
         self.ai_message = self.chat.predict_messages(self.chat_prompt.format_prompt(input_song=self.song_name, input_album=self.album_name, input_artist=self.artist_name).to_messages())
-        return self.ai_message
+        return self.ai_message.content
     
 if __name__ == "__main__":
     langchainfunc = LangChainFunc("Cheating on you", "Cheating on you", "Charlie Puth")

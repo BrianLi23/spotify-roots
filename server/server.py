@@ -78,7 +78,7 @@ def searchbar():
             picture_url = searcher.result["tracks"]["items"][0]["album"]["images"][0]["url"]
             print(artist_name, album_name, song_name, picture_url)
             output = langchainfunc.LangChainFunc(song_name=song_name, album_name=album_name, artist_name=artist_name)
-            text_output = str(output.text_output())
+            text_output = output.text_output()
             print(text_output)
 
             return jsonify({

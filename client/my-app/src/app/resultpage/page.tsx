@@ -28,18 +28,18 @@ export default function ResultPage() {
       <div>
         <Image
           src={data.picture_url}
-          width={1000}
-          height={500}
+          width={1200}
+          height={1200}
           alt="picture"
           className="m-10"
         />
       </div>
-      <div className="m-10">
-        <h1 className="text-5xl">
+      <div className="m-12 mr-8">
+        <h1 className="text-5xl pl-10">
           {data.song_name} | {data.album_name}
         </h1>
-        <h2 className="text-xl mt-2">{data.artist_name}</h2>
-        <h4 className="text-lg">{data.output}</h4>
+        <h2 className="text-xl pt-2 pl-10">{data.artist_name}</h2>
+        <h4 className="text-lg p-10 whitespace-pre-line">{data.output}</h4>
       </div>
     </div>
   );
